@@ -4,18 +4,16 @@ export class Bala {
         this.y = y;
         this.ancho = 20;
         this.alto = 20;
-        this.velocidadY = -5; // Velocidad en el eje Y
-        this.velocidadX = velocidadX; // Velocidad en el eje X (diagonal)
+        this.velocidadY = -5;
+        this.velocidadX = velocidadX;
         this.imagen = new Image();
-        this.imagen.src = "recursos/bala(1).png"; // Ruta de la imagen
+        this.imagen.src = "recursos/bala(1).png";
     }
 
-    // Dibujar la bala en el canvas
     dibujar(ctx) {
         ctx.drawImage(this.imagen, this.x, this.y, this.ancho, this.alto);
     }
 
-    // Movimiento de la bala
     movimiento() {
         this.y += this.velocidadY;
         this.x += this.velocidadX;
@@ -24,46 +22,39 @@ export class Bala {
 
 export function crearBala(player, balas) {
     switch (player.tipoDisparo) {
-        case 0:
-            balas.push(new Bala(player.x + 11, player.y - 4));
+        case 0: // Disparo sencillo
+            balas.push(new Bala(player.x + player.ancho / 2 - 10, player.y - 10));
             break;
-        case 1:
-            balas.push(new Bala(player.x, player.y - 4));
-            balas.push(new Bala(player.x + 22, player.y - 4));
+        case 1: // Disparo doble
+            balas.push(new Bala(player.x + 5, player.y - 10));
+            balas.push(new Bala(player.x + player.ancho - 15, player.y - 10));
             player.municion -= 2;
-            if (player.municion <= 0) {
-                player.tipoDisparo = 0;
-                player.municion = 0;
-            }
             break;
-        case 2:
-            balas.push(new Bala(player.x, player.y - 4));
-            balas.push(new Bala(player.x + 11, player.y - 4));
-            balas.push(new Bala(player.x + 22, player.y - 4));
+        case 2: // Disparo triple
+            balas.push(new Bala(player.x, player.y - 10));
+            balas.push(new Bala(player.x + player.ancho / 2 - 10, player.y - 10));
+            balas.push(new Bala(player.x + player.ancho - 20, player.y - 10));
             player.municion -= 3;
-            if (player.municion <= 0) {
-                player.tipoDisparo = 0;
-                player.municion = 0;
-            }
             break;
-        case 3:
-            balas.push(new Bala(player.x - 11, player.y - 4, -2));
-            balas.push(new Bala(player.x, player.y - 4));
-            balas.push(new Bala(player.x + 11, player.y - 4));
-            balas.push(new Bala(player.x + 22, player.y - 4));
-            balas.push(new Bala(player.x + 33, player.y - 4, 2));
+        case 3: // Disparo quíntuple
+            balas.push(new Bala(player.x - 10, player.y - 10, -2));
+            balas.push(new Bala(player.x, player.y - 10, -1));
+            balas.push(new Bala(player.x + player.ancho / 2 - 10, player.y - 10));
+            balas.push(new Bala(player.x + player.ancho - 20, player.y - 10, 1));
+            balas.push(new Bala(player.x + player.ancho + 10, player.y - 10, 2));
             player.municion -= 5;
-            if (player.municion <= 0) {
-                player.tipoDisparo = 0;
-                player.municion = 0;
-            }
             break;
         default:
             break;
     }
-    // Opcional: Reproducir sonido
+
+    // Volver al disparo básico si la munición se agota
+    if (player.municion <= 0) {
+        player.tipoDisparo = 0;
+        player.municion = 0;
+    }
+
+    // Reproducir sonido de disparo
     const sonidoDisparo = new Audio("recursos/disparo.mp3");
     sonidoDisparo.play();
 }
-
-export default Bala;
