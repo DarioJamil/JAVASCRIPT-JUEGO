@@ -1,7 +1,7 @@
 import Player from "./Personaje.js";
-import { Bala } from "./Bala.js";
+// import { Bala } from "./Bala.js";
 import Enemigo from "./Enemigo.js";
-import { detectarColision } from "./utils.js";
+import { detectarColision, mostrarHUD} from "./utils.js";
 import Item from "./Item.js";
 
 
@@ -38,20 +38,7 @@ function actualizarJuego(timestamp) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Mostrar puntos
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText(`Puntos: ${puntos}`, 10, 20);
-    
-    // Mostrar vida
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText(`Vida: ${player.vida}`, 120, 20);
-
-    // Mostrar municion
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText(`Municion: ${player.municion}`, 240, 20);
+   
 
     // Mover al jugador
     player.movimiento(teclas, canvas.width);
@@ -114,7 +101,7 @@ function actualizarJuego(timestamp) {
         // Verificar colisión entre el player y los enemigos
         if (detectarColision(player.rect, enemigo.rect)) {
             player.vida -= 1;
-            console.log(player.vida);
+            console.log(`me ha quitado  ${player.vida} vida`);
             enemigos.splice(i, 1); // Eliminar enemigo
         }
     }
@@ -147,6 +134,7 @@ function actualizarJuego(timestamp) {
         if (balaEliminada) break; // Si la bala ya fue eliminada, salir del bucle
     }
 
+    mostrarHUD(ctx, puntos, player.vida, player.municion, bonus);
 
     // Llamar al siguiente frame
     requestAnimationFrame(actualizarJuego);

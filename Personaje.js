@@ -25,10 +25,17 @@ class Player {
     }
 
     dibujar(ctx) {
-         // Actualizar el rectángulo
-         this.rect.x = this.x;
-         this.rect.y = this.y;
+          // Actualizar el rectángulo
+        this.rect.x = this.x;
+        this.rect.y = this.y;
+
+        // Dibujar la imagen del jugador
         ctx.drawImage(this.imagen, this.x, this.y, this.ancho, this.alto);
+
+        // Dibujar el rectángulo para depuración (contorno)
+        ctx.strokeStyle = "red"; // Color del contorno
+        ctx.lineWidth = 2; // Ancho del contorno
+        ctx.strokeRect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
     }
 
     movimiento(teclas, anchoCanvas) {

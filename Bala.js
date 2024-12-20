@@ -26,6 +26,10 @@ export class Bala {
         this.rect.x = this.x;
         this.rect.y = this.y;
         ctx.drawImage(this.imagen, this.x, this.y, this.ancho, this.alto);
+
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
 }
 
     movimiento() {
@@ -55,9 +59,9 @@ export function crearBala(player, balas) {
         case 3: // Disparo quíntuple
             balas.push(new Bala(player.x - 10, player.y - 10, -2));
             balas.push(new Bala(player.x, player.y - 10, -1));
-            balas.push(new Bala(player.x + player.ancho / 2 - 10, player.y - 10));
+            balas.push(new Bala(player.x + player.ancho / 2 - 10, player.y - 10)); // bala central
             balas.push(new Bala(player.x + player.ancho - 20, player.y - 10, 1));
-            balas.push(new Bala(player.x + player.ancho + 10, player.y - 10, 2));
+            balas.push(new Bala(player.x + player.ancho -10, player.y - 10, 2));
             player.municion -= 5;
             break;
         default:
