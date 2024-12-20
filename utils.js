@@ -6,3 +6,7 @@ export function detectarColision(rect1, rect2) {
         rect1.y + rect1.height > rect2.y
     );
 }
+
+export function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

@@ -2,6 +2,7 @@ import Player from "./Personaje.js";
 import { Bala } from "./Bala.js";
 import Enemigo from "./Enemigo.js";
 import { detectarColision } from "./utils.js";
+import Item from "./Item.js";
 
 
 const canvas = document.querySelector("canvas");
@@ -14,7 +15,9 @@ const teclas = {};
 const player = new Player(230, 450);
 const balas = []; // Lista de balas activas
 const enemigos = []; // Lista de enemigos
+const items = []; // Lista de items
 let puntos = 0; // Inicializar los puntos en 0
+let bonus = 5;
 
 let tiempoEntreEnemigos = 1000; // Tiempo en milisegundos entre enemigos
 let ultimoTiempoEnemigo = 0;
@@ -66,25 +69,55 @@ function actualizarJuego(timestamp) {
         ultimoTiempoEnemigo = timestamp; // Actualizar el último tiempo
     }
 
-   // Bucle para mover y dibujar los enemigos
-for (let i = enemigos.length - 1; i >= 0; i--) {
-    const enemigo = enemigos[i];
-    enemigo.movimiento();
-    enemigo.dibujar(ctx);
-
-    // Verificar si el enemigo se sale del canvas
-    if (enemigo.y > canvas.height) {
-        enemigos.splice(i, 1); // Eliminar enemigo
-        continue; // No se necesita el "else" aquí porque ya eliminamos al enemigo si se sale del canvas
+    if (puntos >= bonus){
+        const posicionX = Math.random() * (canvas.width - 30);
+        items.push(new Item(posicionX, -30));
+        bonus = puntos+5;
     }
 
-    // Verificar colisión entre el player y los enemigos
-    if (detectarColision(player.rect, enemigo.rect)) {
-        player.vida -= 1;
-        console.log(player.vida);
-        enemigos.splice(i, 1); // Eliminar enemigo
+    // Bucle para mover y dibujar los items
+    for (let i = items.length - 1; i >= 0; i--) {
+        const item = items[i];
+        item.movimiento();
+        item.dibujar(ctx);
+
+        // Verificar si el enemigo se sale del canvas
+        if (item.y > canvas.height) {
+            items.splice(i, 1); // Eliminar item
+            continue; 
+        }
+
+        // Verificar colisión entre el player y los items
+        if (detectarColision(player.rect, item.rect)) {
+            player.tipoDisparo = item.tipo;
+            if(item.tipo == 3){
+                player.municion = 500;
+            }else{
+                player.municion = 50;
+            }
+            items.splice(i, 1); // Eliminar item
+        }
     }
-}
+
+    // Bucle para mover y dibujar los enemigos
+    for (let i = enemigos.length - 1; i >= 0; i--) {
+        const enemigo = enemigos[i];
+        enemigo.movimiento();
+        enemigo.dibujar(ctx);
+
+        // Verificar si el enemigo se sale del canvas
+        if (enemigo.y > canvas.height) {
+            enemigos.splice(i, 1); // Eliminar enemigo
+            continue; // No se necesita el "else" aquí porque ya eliminamos al enemigo si se sale del canvas
+        }
+
+        // Verificar colisión entre el player y los enemigos
+        if (detectarColision(player.rect, enemigo.rect)) {
+            player.vida -= 1;
+            console.log(player.vida);
+            enemigos.splice(i, 1); // Eliminar enemigo
+        }
+    }
 
     // Mover y dibujar las balas
     for (let i = balas.length - 1; i >= 0; i--) {
