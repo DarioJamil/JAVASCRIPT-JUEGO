@@ -6,13 +6,27 @@ export class Bala {
         this.alto = 20;
         this.velocidadY = -5;
         this.velocidadX = velocidadX;
+       
+        // Crear el rectángulo de la bala para colisiones
+        this.rect = {
+            x: this.x,
+            y: this.y,
+            width: this.ancho,
+            height: this.alto
+        };
+
+        // Cargar la imagen de la bala
         this.imagen = new Image();
         this.imagen.src = "recursos/bala(1).png";
     }
 
+   // Dibujar la bala en el canvas
     dibujar(ctx) {
+    // Actualizar el rectángulo
+        this.rect.x = this.x;
+        this.rect.y = this.y;
         ctx.drawImage(this.imagen, this.x, this.y, this.ancho, this.alto);
-    }
+}
 
     movimiento() {
         this.y += this.velocidadY;
