@@ -35,7 +35,9 @@ export class Bala {
 }
 
 export function crearBala(player, balas) {
+    console.log(player.tipoDisparo);
     switch (player.tipoDisparo) {
+       
         case 0: // Disparo sencillo
             balas.push(new Bala(player.x + player.ancho / 2 - 10, player.y - 10));
             break;

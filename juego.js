@@ -35,10 +35,20 @@ function actualizarJuego(timestamp) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-// Mostrar puntos
-ctx.fillStyle = "white";
-ctx.font = "20px Arial";
-ctx.fillText(`Puntos: ${puntos}`, 10, 20);
+    // Mostrar puntos
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText(`Puntos: ${puntos}`, 10, 20);
+    
+    // Mostrar vida
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText(`Vida: ${player.vida}`, 120, 20);
+
+    // Mostrar municion
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText(`Municion: ${player.municion}`, 240, 20);
 
     // Mover al jugador
     player.movimiento(teclas, canvas.width);
@@ -56,17 +66,25 @@ ctx.fillText(`Puntos: ${puntos}`, 10, 20);
         ultimoTiempoEnemigo = timestamp; // Actualizar el último tiempo
     }
 
-    // Mover y dibujar los enemigos
-    for (let i = enemigos.length - 1; i >= 0; i--) {
-        const enemigo = enemigos[i];
-        enemigo.movimiento();
-        enemigo.dibujar(ctx);
+   // Bucle para mover y dibujar los enemigos
+for (let i = enemigos.length - 1; i >= 0; i--) {
+    const enemigo = enemigos[i];
+    enemigo.movimiento();
+    enemigo.dibujar(ctx);
 
-        // Eliminar enemigo si sale del canvas
-        if (enemigo.y > canvas.height) {
-            enemigos.splice(i, 1);
-        }
+    // Verificar si el enemigo se sale del canvas
+    if (enemigo.y > canvas.height) {
+        enemigos.splice(i, 1); // Eliminar enemigo
+        continue; // No se necesita el "else" aquí porque ya eliminamos al enemigo si se sale del canvas
     }
+
+    // Verificar colisión entre el player y los enemigos
+    if (detectarColision(player.rect, enemigo.rect)) {
+        player.vida -= 1;
+        console.log(player.vida);
+        enemigos.splice(i, 1); // Eliminar enemigo
+    }
+}
 
     // Mover y dibujar las balas
     for (let i = balas.length - 1; i >= 0; i--) {
@@ -76,7 +94,7 @@ ctx.fillText(`Puntos: ${puntos}`, 10, 20);
 
        let balaEliminada = false;
 
-        // Verificar colisiones con enemigos
+        // Verificar colisiones bala con enemigos
         for (let j = enemigos.length - 1; j >= 0; j--) {
             const enemigo = enemigos[j];
             if (detectarColision(bala.rect, enemigo.rect)) {
@@ -95,6 +113,7 @@ ctx.fillText(`Puntos: ${puntos}`, 10, 20);
 
         if (balaEliminada) break; // Si la bala ya fue eliminada, salir del bucle
     }
+
 
     // Llamar al siguiente frame
     requestAnimationFrame(actualizarJuego);

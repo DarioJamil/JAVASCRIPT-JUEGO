@@ -7,7 +7,7 @@ class Player {
         this.ancho = 40;
         this.alto = 40;
         this.velocidad = 5;
-        this.tipoDisparo = 0; // Tipo de disparo inicial
+        this.tipoDisparo = 3; // Tipo de disparo inicial
         this.municion = 100; // Munición inicial
         this.vida = 2;
 
