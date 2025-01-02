@@ -32,6 +32,32 @@ window.addEventListener("keyup", (evento) => {
     player.habilitarDisparo(evento); // Rehabilitar disparo
 });
 
+// Evento para actualizar la posición del ratón
+canvas.addEventListener("mousemove", (evento) => {
+    player.actualizarPosicionMouse(evento, canvas);
+});
+
+// Habilitar el movimiento y disparo al hacer clic izquierdo
+canvas.addEventListener("mousedown", (evento) => {
+    if (evento.button === 0) { // Botón izquierdo
+        player.movimientoHabilitado = true; // Habilitar movimiento
+        player.disparoPresionado = true;   // Habilitar disparo
+    }
+});
+
+// Deshabilitar el disparo al soltar el botón izquierdo
+canvas.addEventListener("mouseup", (evento) => {
+    if (evento.button === 0) { // Botón izquierdo
+        player.disparoPresionado = false; // Deshabilitar disparo
+    }
+});
+
+canvas.addEventListener("mouseleave", () => {
+    player.mouseX = player.x + player.ancho / 2;
+    player.mouseY = player.y + player.alto / 2;
+    player.disparoPresionado = false; // Deshabilitar disparo
+});
+
 // Actualizar y dibujar el juego
 function actualizarJuego(timestamp) {
     // Rellenar el fondo de negro
@@ -41,13 +67,18 @@ function actualizarJuego(timestamp) {
    
 
     // Mover al jugador
-    player.movimiento(teclas, canvas.width);
+    // player.movimientoConTeclado(teclas, canvas.width, canvas.height );
+
+    player.movimientoConRaton();
 
     // Dibujar al jugador
     player.dibujar(ctx);
 
     // Disparar si se presiona la tecla correspondiente
     player.disparar(teclas, balas);
+
+    player.dispararAutomaticamente(balas, timestamp);
+
 
     // Crear nuevos enemigos en intervalos
     if (timestamp - ultimoTiempoEnemigo > tiempoEntreEnemigos) {
