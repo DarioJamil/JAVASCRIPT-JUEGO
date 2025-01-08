@@ -80,6 +80,25 @@ class Player {
         }
     }
 
+    // NUEVA FUNCIÓN para gestionar el movimiento según el modo actual
+    movimiento(teclas, canvas) {
+        
+        switch (this.modoMovimiento) {
+            case "teclado":
+                this.movimientoConTeclado(teclas, canvas.width, canvas.height);
+                break;
+            case "raton":
+                this.movimientoConRaton();
+                break;
+            default:
+                this.movimientoConTeclado(teclas, canvas.width, canvas.height);
+        }
+    }
+
+    cambiarModoMovimiento(nuevoModo) {
+        this.modoMovimiento = nuevoModo; // Cambiar el modo
+    }
+
     disparar(teclas, balas) {
         if (teclas["p"] && this.disparoDisponible ) {
             crearBala(this, balas);

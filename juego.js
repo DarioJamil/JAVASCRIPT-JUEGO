@@ -25,11 +25,18 @@ let ultimoTiempoEnemigo = 0;
 // Escuchar eventos de teclado
 window.addEventListener("keydown", (evento) => {
     teclas[evento.key] = true;
+    if (evento.key === "1") {
+        player.cambiarModoMovimiento("teclado"); // Cambiar a teclado
+    } else if (evento.key === "2") {
+        player.cambiarModoMovimiento("raton"); // Cambiar a ratón
+    }
+   
 });
 
 window.addEventListener("keyup", (evento) => {
     teclas[evento.key] = false;
     player.habilitarDisparo(evento); // Rehabilitar disparo
+    
 });
 
 // Evento para actualizar la posición del ratón
@@ -52,6 +59,7 @@ canvas.addEventListener("mouseup", (evento) => {
     }
 });
 
+// Deshabilitar movimiento si el ratón sale del canvas
 canvas.addEventListener("mouseleave", () => {
     player.mouseX = player.x + player.ancho / 2;
     player.mouseY = player.y + player.alto / 2;
@@ -64,13 +72,17 @@ function actualizarJuego(timestamp) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+   // Cambiar tipo de movimiento 
+    // if (teclas["1"]){
+    // // Mover al jugador
+    //     player.movimientoConTeclado(teclas, canvas.width, canvas.height );
+    // }else if(teclas["2"]){
+    //     player.movimientoConRaton();
+    // }
+     // Usar la nueva función de movimiento en el jugador
+    player.movimiento(teclas, canvas);
+
    
-
-    // Mover al jugador
-    // player.movimientoConTeclado(teclas, canvas.width, canvas.height );
-
-    player.movimientoConRaton();
-
     // Dibujar al jugador
     player.dibujar(ctx);
 
